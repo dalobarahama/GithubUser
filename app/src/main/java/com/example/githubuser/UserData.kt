@@ -47,10 +47,7 @@ object UserData {
         get() {
             val list = arrayListOf<User>()
             for (position in names.indices) {
-                val user = User()
-                user.name = names[position]
-                user.username = usernames[position]
-                user.image = images[position]
+                val user = User(names[position], usernames[position], images[position])
                 list.add(user)
             }
             return list

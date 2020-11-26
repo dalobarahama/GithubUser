@@ -1,5 +1,6 @@
 package com.example.githubuser
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSelectedUser(user: User) {
         Toast.makeText(this, "Kamu memilih " + user.name, Toast.LENGTH_SHORT).show()
+
+        val person = User(user.name, user.username, user.image)
+        val goToDetail = Intent(this@MainActivity, DetailActivity::class.java)
+        goToDetail.putExtra(DetailActivity.EXTRA_USER, person)
+        startActivity(goToDetail)
     }
 
 }
