@@ -9,12 +9,12 @@ import android.os.Parcelable
 data class User(
     var name: String?,
     var username: String?,
-    var image: Int?
+    var image: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readValue(Int::class.java.classLoader) as? Int
+        parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

@@ -1,5 +1,6 @@
 package com.example.githubuser
 
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,12 +8,13 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,9 +35,7 @@ class MainActivity : AppCompatActivity() {
         recyclerview = findViewById(R.id.recyclerview)
         recyclerview.setHasFixedSize(true)
 
-        getUser()
-//        list.addAll(UserData.listData)
-
+        searchUser()
     }
 
     private fun showRecyclerList(list: ArrayList<User>) {
@@ -51,45 +51,63 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSelectedUser(user: User) {
-        Toast.makeText(this, "Kamu memilih " + user.name, Toast.LENGTH_SHORT).show()
-
         val person = User(user.name, user.username, user.image)
         val goToDetail = Intent(this@MainActivity, DetailActivity::class.java)
         goToDetail.putExtra(DetailActivity.EXTRA_USER, person)
         startActivity(goToDetail)
     }
 
-    private fun getUser() {
+    private fun searchUser() {
+        val searchManager = getSystemService(SEARCH_SERVICE) as SearchManager
+        val searchView = findViewById<SearchView>(R.id.search_view)
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.queryHint = resources.getString(R.string.search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let { getUser(it) }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
+
+    private fun getUser(username: String) {
         Log.d(TAG, "getUser: called")
         progressbar.visibility = View.VISIBLE
+        val url = "https://api.github.com/search/users?q=$username"
         val client = AsyncHttpClient()
-        val url = "https://api.github.com/users"
+        client.addHeader("Authorization", "token f2b997848bf5a69f524020ca0390040882745cf3")
+        client.addHeader("User-Agent", "request")
         client.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(
                 statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray?
+                headers: Array<Header>,
+                responseBody: ByteArray
             ) {
                 Log.d(TAG, "onSuccess: called")
                 progressbar.visibility = View.INVISIBLE
 
                 val listUser = ArrayList<User>()
 
-                val result = String(responseBody!!)
+                val result = String(responseBody)
                 Log.d(TAG, result)
                 try {
-                    val jsonArray = JSONArray(result)
+                    val responseObject = JSONObject(result)
+                    val items = responseObject.getJSONArray("items")
 
-                    for (i in 0 until jsonArray.length()) {
+                    for (i in 0 until items.length()) {
                         Log.d(TAG, "jsonArray: called")
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val name = jsonObject.getString("login")
-                        val username = jsonObject.getString("organizations_url")
-                        val image = jsonObject.getString("avatar_url")
-                        val user = User(name, username, image.toInt())
+                        val item = items.getJSONObject(i)
+                        val name = item.getString("login")
+                        val username = item.getString("login")
+                        val image = item.getString("avatar_url")
+                        val user = User(name, username, image)
                         listUser.add(user)
 
-                        Toast.makeText(this@MainActivity, name, Toast.LENGTH_SHORT).show()
                     }
                     showRecyclerList(listUser)
 
@@ -101,9 +119,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(
                 statusCode: Int,
-                headers: Array<out Header>?,
-                responseBody: ByteArray?,
-                error: Throwable?
+                headers: Array<Header>,
+                responseBody: ByteArray,
+                error: Throwable
             ) {
                 progressbar.visibility = View.INVISIBLE
                 val errorMessage = when (statusCode) {
