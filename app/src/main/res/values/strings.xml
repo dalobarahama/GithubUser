@@ -2,6 +2,9 @@
     <string name="app_name">Github User</string>
     <string name="search_hint">Inputkan Nama User</string>
 
+    <string name="tab_text_1">Follower</string>
+    <string name="tab_text_2">Following</string>
+
     <string-array name="data_name">
         <item>Ahmad Dahlan</item>
         <item>Ahmad Yani</item>
@@ -40,5 +43,7 @@
         <item>@drawable/supomo</item>
         <item>@drawable/tan_malaka</item>
     </array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
