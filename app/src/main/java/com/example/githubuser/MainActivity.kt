@@ -19,7 +19,6 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerview: RecyclerView
-    private var list: ArrayList<User> = arrayListOf()
     private lateinit var progressbar: ProgressBar
 
     companion object {
