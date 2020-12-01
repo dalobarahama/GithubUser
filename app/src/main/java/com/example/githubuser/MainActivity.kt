@@ -2,6 +2,8 @@ package com.example.githubuser
 
 import android.app.SearchManager
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -104,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                         val name = item.getString("login")
                         val username = item.getString("login")
                         val image = item.getString("avatar_url")
+
                         val user = User(name, username, image)
                         listUser.add(user)
 
