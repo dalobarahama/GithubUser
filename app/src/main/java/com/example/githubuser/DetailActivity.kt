@@ -1,6 +1,5 @@
 package com.example.githubuser
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,14 +29,11 @@ class DetailActivity : AppCompatActivity() {
         val profilePic: CircleImageView = findViewById(R.id.profile_pic)
 
         val person = intent.getParcelableExtra<User>(EXTRA_USER) as User
-        val name = person.name.toString()
-        val username = person.username.toString()
-        val image = BitmapFactory.decodeFile(person.image.toString())
 
-        tvName.text = name
-        tvUsername.text = username
+        tvName.text = person.name.toString()
+        tvUsername.text = person.username.toString()
         Glide.with(this)
-            .load(image)
+            .load(person.image)
             .into(profilePic)
 
         setUpSectionPagerAdapter(person)

@@ -1,5 +1,6 @@
-package com.example.githubuser.tablayout
+ package com.example.githubuser.tablayout
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.githubuser.DetailActivity
 import com.example.githubuser.ListUserAdapter
 import com.example.githubuser.R
 import com.example.githubuser.User
@@ -115,6 +117,12 @@ class FollowingFragment : Fragment() {
         recyclerview.layoutManager = LinearLayoutManager(context)
         listUserAdapter = ListUserAdapter(list)
         recyclerview.adapter = listUserAdapter
+
+        listUserAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: User) {
+
+            }
+        })
     }
 
 }
