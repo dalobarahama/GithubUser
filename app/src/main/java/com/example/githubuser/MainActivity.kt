@@ -5,12 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
@@ -19,7 +19,7 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerview: RecyclerView
-    private lateinit var progressbar: ProgressBar
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
@@ -29,10 +29,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        progressbar = findViewById(R.id.progress_bar)
-
         recyclerview = findViewById(R.id.recyclerview)
         recyclerview.setHasFixedSize(true)
+
+        shimmerFrameLayout = findViewById(R.id.shimmer_view_container)
 
         searchUser()
     }
@@ -76,7 +76,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUser(username: String) {
         Log.d(TAG, "getUser: called")
-        progressbar.visibility = View.VISIBLE
+        recyclerview.visibility = View.INVISIBLE
+        shimmerFrameLayout.visibility = View.VISIBLE
+        shimmerFrameLayout.startShimmer()
         val url = "https://api.github.com/search/users?q=$username"
         val client = AsyncHttpClient()
         client.addHeader("Authorization", "token f2b997848bf5a69f524020ca0390040882745cf3")
@@ -88,7 +90,9 @@ class MainActivity : AppCompatActivity() {
                 responseBody: ByteArray
             ) {
                 Log.d(TAG, "onSuccess: called")
-                progressbar.visibility = View.INVISIBLE
+                shimmerFrameLayout.visibility = View.INVISIBLE
+                shimmerFrameLayout.stopShimmer()
+                recyclerview.visibility = View.VISIBLE
 
                 val listUser = ArrayList<User>()
 
@@ -123,7 +127,9 @@ class MainActivity : AppCompatActivity() {
                 responseBody: ByteArray,
                 error: Throwable
             ) {
-                progressbar.visibility = View.INVISIBLE
+                shimmerFrameLayout.visibility = View.INVISIBLE
+                shimmerFrameLayout.stopShimmer()
+                recyclerview.visibility = View.VISIBLE
                 val errorMessage = when (statusCode) {
                     401 -> "$statusCode: Bad Request"
                     403 -> "$statusCode: Forbidden"
