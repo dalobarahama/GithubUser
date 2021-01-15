@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUser(username: String) {
         Log.d(TAG, "getUser: called")
-        recyclerview.visibility = View.INVISIBLE
+        recyclerview.visibility = View.GONE
         shimmerFrameLayout.visibility = View.VISIBLE
         shimmerFrameLayout.startShimmer()
         val url = "https://api.github.com/search/users?q=$username"
@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity() {
                 responseBody: ByteArray
             ) {
                 Log.d(TAG, "onSuccess: called")
-                shimmerFrameLayout.visibility = View.INVISIBLE
-                shimmerFrameLayout.stopShimmer()
                 recyclerview.visibility = View.VISIBLE
+                shimmerFrameLayout.visibility = View.GONE
+                shimmerFrameLayout.stopShimmer()
 
                 val listUser = ArrayList<User>()
 
@@ -127,9 +127,9 @@ class MainActivity : AppCompatActivity() {
                 responseBody: ByteArray,
                 error: Throwable
             ) {
-                shimmerFrameLayout.visibility = View.INVISIBLE
-                shimmerFrameLayout.stopShimmer()
                 recyclerview.visibility = View.VISIBLE
+                shimmerFrameLayout.visibility = View.GONE
+                shimmerFrameLayout.stopShimmer()
                 val errorMessage = when (statusCode) {
                     401 -> "$statusCode: Bad Request"
                     403 -> "$statusCode: Forbidden"
