@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         shimmerFrameLayout.startShimmer()
         val url = "https://api.github.com/search/users?q=$username"
         val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token f2b997848bf5a69f524020ca0390040882745cf3")
+        client.addHeader("Authorization", "token " + BuildConfig.github_api_key)
         client.addHeader("User-Agent", "request")
         client.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(

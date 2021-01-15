@@ -1,6 +1,5 @@
 package com.example.githubuser.tablayout
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.githubuser.DetailActivity
+import com.example.githubuser.BuildConfig
 import com.example.githubuser.ListUserAdapter
 import com.example.githubuser.R
 import com.example.githubuser.User
@@ -62,7 +61,7 @@ class FollowerFragment : Fragment() {
         progressbar.visibility = View.VISIBLE
         val url = "https://api.github.com/users/$username/followers"
         val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token f2b997848bf5a69f524020ca0390040882745cf3")
+        client.addHeader("Authorization", "token " + BuildConfig.github_api_key)
         client.addHeader("User-Agent", "request")
         client.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(

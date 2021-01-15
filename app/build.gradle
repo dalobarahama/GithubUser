@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
 }
 
+def STRING = 'String'
+def GITHUB_API_KEY = '"' + github_api_key + '"' ?: '"Define your The Movie DB API Key!"'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -15,6 +18,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        each { type ->
+            type.buildConfigField STRING, 'github_api_key', GITHUB_API_KEY
+        }
     }
 
     buildTypes {
